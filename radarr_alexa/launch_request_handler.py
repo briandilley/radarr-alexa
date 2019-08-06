@@ -7,6 +7,7 @@ from ask_sdk_model.ui import SimpleCard
 
 class LaunchRequestHandler(AbstractRequestHandler):
 
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("LaunchRequest")(handler_input) \

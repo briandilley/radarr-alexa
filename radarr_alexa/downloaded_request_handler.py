@@ -1,8 +1,10 @@
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
-from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
+from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
+
+from .radar_client import get_history_response
 
 
 class DownloadedRequestHandler(AbstractRequestHandler):
@@ -13,9 +15,7 @@ class DownloadedRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speech_text = """
-        Lets see what movies you have downloaded, and then fuck you in the ass.
-        """
+        speech_text = get_history_response()
 
         handler_input.response_builder.speak(speech_text)\
             .set_card(SimpleCard("Downloaded", speech_text))\
