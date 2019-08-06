@@ -12,6 +12,6 @@ class AllExceptionHandler(AbstractExceptionHandler):
         # Log the exception in CloudWatch Logs
         print(exception)
 
-        speech = "Sorry, I didn't get it. Can you please say it again!!"
+        speech = "Sorry, there was an error.  Please try again!"
         handler_input.response_builder.speak(speech).ask(speech)
         return handler_input.response_builder.response

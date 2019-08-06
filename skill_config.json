@@ -4,19 +4,23 @@
       "invocationName": "radar",
       "intents": [
         {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        },
-        {
           "name": "AMAZON.HelpIntent",
           "samples": []
         },
         {
-          "name": "AMAZON.StopIntent",
+          "name": "AMAZON.CancelIntent",
           "samples": []
         },
         {
-          "name": "AMAZON.NavigateHomeIntent",
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
           "samples": []
         },
         {
@@ -25,6 +29,10 @@
             {
               "name": "movie_name",
               "type": "AMAZON.Movie"
+            },
+            {
+              "name": "movie_year",
+              "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
@@ -52,7 +60,32 @@
             "fetch me the movie {movie_name}",
             "fetch {movie_name}",
             "fetch movie {movie_name}",
-            "fetch the movie {movie_name}"
+            "fetch the movie {movie_name}",
+            "grab me {movie_name} from {movie_year}",
+            "gram me the movie {movie_name} from {movie_year}",
+            "grab {movie_name} from {movie_year}",
+            "grab movie {movie_name} from {movie_year}",
+            "grab the movie {movie_name} from {movie_year}",
+            "download me {movie_name} from {movie_year}",
+            "download me the movie {movie_name} from {movie_year}",
+            "download {movie_name} from {movie_year}",
+            "download movie {movie_name} from {movie_year}",
+            "download the movie {movie_name} from {movie_year}",
+            "get me {movie_name} from {movie_year}",
+            "get me the movie {movie_name} from {movie_year}",
+            "get {movie_name} from {movie_year}",
+            "get movie {movie_name} from {movie_year}",
+            "get the movie {movie_name} from {movie_year}",
+            "find me {movie_name} from {movie_year}",
+            "find me the movie {movie_name} from {movie_year}",
+            "find {movie_name} from {movie_year}",
+            "find movie {movie_name} from {movie_year}",
+            "find the movie {movie_name} from {movie_year}",
+            "fetch me {movie_name} from {movie_year}",
+            "fetch me the movie {movie_name} from {movie_year}",
+            "fetch {movie_name} from {movie_year}",
+            "fetch movie {movie_name} from {movie_year}",
+            "fetch the movie {movie_name} from {movie_year}"
           ]
         },
         {
@@ -71,38 +104,6 @@
         }
       ],
       "types": []
-    },
-    "dialog": {
-      "intents": [
-        {
-          "name": "DownloadIntent",
-          "confirmationRequired": true,
-          "prompts": {
-            "confirmation": "Confirm.Intent.432795824537"
-          },
-          "slots": [
-            {
-              "name": "movie_name",
-              "type": "AMAZON.Movie",
-              "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {}
-            }
-          ]
-        }
-      ],
-      "delegationStrategy": "ALWAYS"
-    },
-    "prompts": [
-      {
-        "id": "Confirm.Intent.432795824537",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "You want to get the movie {movie_name} , is that correct?"
-          }
-        ]
-      }
-    ]
+    }
   }
 }

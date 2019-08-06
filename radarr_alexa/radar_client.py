@@ -1,9 +1,11 @@
 
-import requests
 import os
+
+import requests
 
 RADAR_BASE_URL = os.environ.get('RADAR_BASE_URL')
 RADAR_API_KEY = os.environ.get('RADAR_API_KEY')
+RADAR_ROOT_PATH = os.environ.get('RADAR_ROOT_PATH')
 
 
 def get_history_response(count=5):
@@ -31,54 +33,61 @@ def get_history_response(count=5):
         records = records[:5]
 
     return "The following " + str(len(records)) + " movies have downloaded recently: " \
-           + ". ".join([r['movie']['title'] for r in records])
+           + ". ".join([r['movie']['title'] + " " + str(r['movie']['year']) for r in records])
 
 
-def add_movie_to_download(title):
+def search_movie_for_download(title, year):
     response = requests.get(RADAR_BASE_URL + "/api/movie/lookup", params={
         'apikey': RADAR_API_KEY,
         'term': title
     })
     if response.status_code != requests.codes.ok:
-        return "There was a problem communicating with your Radar backend: " + response.text
+        return (
+            "There was a problem communicating with your Radar backend: " + response.text,
+            None)
 
     records = response.json()
     if len(records) == 0:
-        return "Radar couldn't find the movie: " + title
+        return (
+            "Radar couldn't find the movie: " + title,
+            None)
 
-    record = records[0]
-    if not record.get('isAvailable', False):
-        return "The movie " + record['title'] + " is not available"
-
-    response = requests.get(RADAR_BASE_URL + "/api/movie", params={
-        'apikey': RADAR_API_KEY,
-        'pageSize': '-1'
-    })
-
-    existing = None
-    for r in response.json():
-        if r['titleSlug'] == record['titleSlug']:
-            existing = r
+    record = None
+    for r in records:
+        if r.get('isAvailable', False) and (year is None or r.get('year', None) == year):
+            record = r
             break
 
-    if existing:
-        return "You have already added the movie " + existing["title"]
+    if not record:
+        return (
+            "The movie " + title + " was not found"
+            if year else "The movie " + title + " from " + str(year) + " was not found",
+            None)
 
-    #requests.post(RADAR_BASE_URL + "/api/movie", params={
-    #    'apikey': RADAR_API_KEY
-    #    },
-    #    json={
-    #        'title': record['title'],
-    #        'qualityProfileId': 6,
-    #        'titleSlug': record['titleSlug'],
-    #        'images': record['images'],
-    #        'tmdbId': record['tmdbId'],
-    #        'year': record['year'],
-    #        'title': record['title']
-    #    })
+    return (
+        "Radar found " + record["title"] + " from " + str(record["year"]) + ", is that what you are looking for?",
+        record)
 
-    #
-    #return "The following " + str(len(records)) + " movies have downloaded recently: " \
-    #       + ". ".join([r['movie']['title'] for r in records])
 
-    return "The movie " + record['title'] + " was found, but this functionality isn't coded yet... bitch ass mofo"
+def add_movie_to_download(record):
+    response = requests.post(RADAR_BASE_URL + "/api/movie", params={
+            'apikey': RADAR_API_KEY
+        },
+        json={
+             'title': record['title'],
+             'qualityProfileId': 6,
+             'titleSlug': record['titleSlug'],
+             'images': record['images'],
+             'tmdbId': record['tmdbId'],
+             'year': record['year'],
+             'monitored': True,
+             'addOptions': {
+                 'searchForMovie': True
+             },
+             'rootFolderPath': RADAR_ROOT_PATH
+         })
+
+    if response.status_code < 200 or response.status_code > 299:
+        return "The movie " + record['title'] + " wasn't added, perhaps you already have it?"
+
+    return "The movie " + record['title'] + " was found and added to Radar "

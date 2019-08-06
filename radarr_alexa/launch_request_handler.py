@@ -7,7 +7,6 @@ from ask_sdk_model.ui import SimpleCard
 
 class LaunchRequestHandler(AbstractRequestHandler):
 
-
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("LaunchRequest")(handler_input) \
@@ -22,7 +21,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
         handler_input.response_builder.speak(speech_text)\
             .set_card(SimpleCard("Welcome", speech_text))\
-            .set_should_end_session(True)
+            .set_should_end_session(False)
 
         return handler_input.response_builder.response
 
