@@ -33,7 +33,7 @@ def get_history_response(count=5):
         records = records[:5]
 
     return "The following " + str(len(records)) + " movies have downloaded recently: " \
-           + ". ".join([r['movie']['title'] + " " + str(r['movie']['year']) for r in records])
+           + ". ".join([r['movie']['title'] + " from " + str(r['movie']['year']) for r in records])
 
 
 def search_movie_for_download(title, year):
